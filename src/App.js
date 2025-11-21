@@ -1,8 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import React from 'react';
-import LightSwitch from './LightSwitch';
-import LightBulb from './LightBulb';
+import LightSwitch from './lighting/LightSwitch';
+import LightBulb from './lighting/LightBulb';
 
 class App extends React.Component {
   constructor(props) {
