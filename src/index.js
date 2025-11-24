@@ -4,12 +4,13 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Calculator from './calculator/Calculator';
+import FilterableProductTable from './product/FilterableProductTable';
 
 const h1 = <h1>Hello world!</h1>
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <Calculator />
+  <FilterableProductTable />
 );
 
 // If you want to start measuring performance in your app, pass a function
