@@ -1,87 +1,88 @@
 import React, { Component } from "react";
+import "./FilterableProductTable.css";
+import SearchBar from "./SearchBar";
+import ProductTable from "./ProductTable";
+import { isInaccessible } from "@testing-library/dom";
 
 const productList = [
   {
-    "category": "Sporting Goods",
-    "price": "$49.99",
-    "stocked": true,
-    "name": "Football"
+    category: "Sporting Goods",
+    price: "$49.99",
+    stocked: true,
+    name: "Football",
   },
   {
-    "category": "Sporting Goods",
-    "price": "$9.99",
-    "stocked": true,
-    "name": "Baseball"
+    category: "Sporting Goods",
+    price: "$9.99",
+    stocked: true,
+    name: "Baseball",
   },
   {
-    "category": "Sporting Goods",
-    "price": "$29.99",
-    "stocked": false,
-    "name": "Basketball"
+    category: "Sporting Goods",
+    price: "$29.99",
+    stocked: false,
+    name: "Basketball",
   },
   {
-    "category": "Electronics",
-    "price": "$99.99",
-    "stocked": true,
-    "name": "iPod Touch"
+    category: "Electronics",
+    price: "$99.99",
+    stocked: true,
+    name: "iPod Touch",
   },
   {
-    "category": "Electronics",
-    "price": "$399.99",
-    "stocked": false,
-    "name": "iPhone 5"
+    category: "Electronics",
+    price: "$399.99",
+    stocked: false,
+    name: "iPhone 5",
   },
   {
-    "category": "Electronics",
-    "price": "$199.99",
-    "stocked": true,
-    "name": "Nexus 7"
-  }
-]
+    category: "Electronics",
+    price: "$199.99",
+    stocked: true,
+    name: "Nexus 7",
+  },
+];
 
-const category = new Map();
-productList.forEach((product) => {
-    if(!category.has(product.category)) {
-       category.set(product.category, []); 
-    }
-
-    category[product.category] = {
-        name: product.name,
-        price: product.price
-    }
-} );
-category.forEach(()=> console.log(category.keys))
-
+const fecthApi = () => Promise.resolve(productList);
 
 export default class FilterableProductTable extends Component {
-  render() {
-    return (
-      <div>
-        <form action="">
-          <input type="text" name="" id="" placeholder="Search ..." />
-          <div>
-            <input type="checkbox" name="" id="" />
-            Only show products in stock
-          </div>
+  constructor(props) {
+    super(props);
+    this.state = {
+      productList: [],
+      searchBar: '',
+      inStock: false
+    }
+  }
 
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th colSpan={2}>Sporting Goods</th>
-              </tr>
-              <tr>
-                <td>Football</td>
-                <td>49.99</td>
-              </tr>
-            </tbody>
-          </table>
-        </form>
+  componentDidMount() { // hình như là chạy sau constructor
+    fecthApi().then((res) => {
+      this.setState({
+        productList: res
+      })
+    })
+  }
+
+  handleOnChange = (value) => (event) => {
+    if(value === 'searchText') {
+      this.setState({
+        searchBar: event.target.value
+      })
+    } else if(value === 'inStock') {
+      this.setState({
+        inStock: event.target.checked
+      })
+    }
+  }
+
+
+  render() {
+    const {productList, searchBar, inStock} = this.state;
+
+    return (
+      <div className="product">
+        <SearchBar onChangeInput={this.handleOnChange} searchBar={searchBar} inStock={inStock} />
+        <ProductTable productList={productList} searchBar={searchBar} inStock={inStock}/>
       </div>
     );
   }

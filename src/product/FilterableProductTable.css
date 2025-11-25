@@ -1,0 +1,16 @@
+form {
+    border: 3px solid #bea6bf;
+    padding: 10px;
+    width: 400px;
+}
+
+table {
+    border: 3px solid #bea6bf;
+    width: 425.9px;
+    text-align: left;
+    padding: 10px;
+}
+
+.product {
+    padding: 50px;
+}
