@@ -1,5 +1,19 @@
 import React, { Component, useEffect, useState } from "react";
 
+// useState với setState bên class khác nhau 
+// setStatus có thể thay đổi field mà không ảnh hưởng ví dụ:
+// {
+//   name: '',
+//   address: ''
+// }
+// setState({address: new}) -> thì name vẫn giữ nguyên nhưng với ông useState thì phải viết rõ ràng ra kẻo 
+// mất field khác ví dụ
+// setAge(preAge => preAge + 1) => nhớ là dùng arrow func để lấy state của tuổi mới nhất
+// setAge(age + 1) => là ghi đè state cũ chứ không phải cập nhật giá trị mới nhất của field trong quá trình
+// thay đổi do người khác (race condition) => tức là không có arrow func thì dùng field cũ lưu ban đầu trong state closure
+
+// chú 2 cái setGames reRender
+
 const handleChangeGame = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -23,8 +37,14 @@ export default function UserFuncComponent() {
     console.log('Re-render!')
     return setReRender((pre) => pre + 1);
   };
+  
+  // nếu không truyền phía sau thì chạy lại mỗi khi re render
+  useEffect(() => {
+    console.log('useEffect giống componentDidUpdate, chạy khi component re-render!!!');
+  })
 
-  // nghe nói đâu chạy như didmount bên class component
+  // nếu truyền có [] phía sau
+  // nghe nói đâu chạy như componentDidMount bên class component: hình như chạy đúng 1 lần duy nhất á.
   useEffect(() => {
     handleChangeGame().then((res) => {
       setGames((pre) => ({
@@ -56,18 +76,18 @@ export default function UserFuncComponent() {
   });
 
   const onChange = () => {
-    const oldCharacter = games.lmht.best_character;
+  setGames(prevGames => {
+    const oldCharacter = prevGames.lmht.best_character;
     const newCharacter = oldCharacter === "Soraka!!!" ? "Aya!!!" : "Soraka!!!";
-    setGames((games) => {
-      return {
-        ...games,
-        lmht: {
-          ...games.lmht,
-          best_character: newCharacter,
-        }
-      };
-    });
-  };
+    return {
+      ...prevGames,
+      lmht: {
+        ...prevGames.lmht,
+        best_character: newCharacter,
+      }
+    };
+  });
+};
 
   const increase = () => setAge((age) => age + 1);
 
