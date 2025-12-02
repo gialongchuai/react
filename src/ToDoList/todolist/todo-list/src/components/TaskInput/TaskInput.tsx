@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import style from "./taskInput.module.scss";
 import Todo from "../../@types/todo.type";
 import Title from "../Title";
@@ -41,11 +41,26 @@ export default function TaskInput(props: TaskInputProps) {
       street: "123 Tran Hung Dao",
     };
   }, []); // []: dependencies nến truyền vào name, thì name changes thì gọi lại memo này
-  // nếu không nói gì thì gọi đúng 1 lần lúc rerender
+  // nếu không nói gì thì gọi đúng 1 lần lúc reload
+  // rerender không chạy lại nữa
+
+  // Cách 01:
+  // const header = useMemo(() => {
+  //   return (value: any) => console.log(value);
+  // }, [])
+
+  // Cách 02:
+  const header = useCallback((value: any) => {
+    console.log(value)
+  }, []);
+
+  // có thể dùng useMemo hoặc useCallBack cũng được gọi khi onClick vào header Title
+  // 2 ông không chạy lại mỗi lần re-render
+
 
   return (
     <div>
-      <Title address={address} />
+      <Title address={address} header={header} />
       <form className={style.input_caption} onSubmit={handleSubmit}>
         <input
           className={style.input_text}
