@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import style from "./taskInput.module.scss";
 import Todo from "../../@types/todo.type";
+import Title from "../Title";
 
 interface TaskInputProps {
   addTodo: (name: string) => void;
   currentTodo: Todo | null | undefined;
   editTodo: (name: string) => void;
-  saveTodo: () => void
+  saveTodo: () => void;
 }
 
 export default function TaskInput(props: TaskInputProps) {
@@ -15,9 +16,11 @@ export default function TaskInput(props: TaskInputProps) {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // tránh refresh trình duyệt
-    if (currentTodo) { // nếu mà submit mà tồn tịa currentTodo tức todo đang sửa thì gọi saveTodo
+    if (currentTodo) {
+      // nếu mà submit mà tồn tịa currentTodo tức todo đang sửa thì gọi saveTodo
       saveTodo();
-    } else { // ngược lại tức là thêm 1 todo mới
+    } else {
+      // ngược lại tức là thêm 1 todo mới
       addTodo(name); // submit thì callback gọi addToDo
     }
     setName(""); // sau khi add success thì clear input
@@ -25,16 +28,24 @@ export default function TaskInput(props: TaskInputProps) {
 
   const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    if (currentTodo) { // nếu đang sửa 1 todo callback bên kia gọi để set lại currentTodo với name đã
+    if (currentTodo) {
+      // nếu đang sửa 1 todo callback bên kia gọi để set lại currentTodo với name đã
       editTodo(value); // đnag thay đổi
     } else {
       setName(value); // mỗi lần thay đổi set lại State
     }
   };
 
+  const address = useMemo(() => { // 1 callback return 1 object
+    return {
+      street: "123 Tran Hung Dao",
+    };
+  }, []); // []: dependencies nến truyền vào name, thì name changes thì gọi lại memo này
+  // nếu không nói gì thì gọi đúng 1 lần lúc rerender
+
   return (
     <div>
-      <h1 className={style.h1}>To do list typescript</h1>
+      <Title address={address} />
       <form className={style.input_caption} onSubmit={handleSubmit}>
         <input
           className={style.input_text}
